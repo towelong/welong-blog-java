@@ -24,8 +24,7 @@ public interface ArticleRepository extends JpaRepository<Article,Long> {
 
 
     Page<Article> findAllByStatus(boolean status,Pageable pageable);
-
-
+    Page<Article> findAll(Pageable pageable);
 
     @Transactional
     @Modifying
