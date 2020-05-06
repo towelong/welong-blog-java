@@ -18,4 +18,5 @@ public class UserBO {
     private String account;
     private String password;
     private Long group_id;
+    private String oldPassword;
 }

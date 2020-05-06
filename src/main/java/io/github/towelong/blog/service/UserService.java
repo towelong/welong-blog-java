@@ -151,4 +151,19 @@ public class UserService {
         userRepository.deleteUser(new Date(),uid);
         userGroupRepository.deleteUserGroup(new Date(),uid);
     }
+
+    public void changePassword(UserBO user) throws InvalidHashException {
+        User user1 = new User();
+        Optional<User> exit = userRepository.findById(RequestHelper.getUid());
+        exit.orElseThrow(()-> new NotFoundException(20002));
+        String cryptPassword = exit.get().getPassword();
+        boolean isTrue = user1.encrypt(user.getOldPassword(), cryptPassword);
+        if(isTrue){
+            String password1 = user1.setPasswordEncrypt(user.getPassword());
+            userRepository.editUserPassword(password1, RequestHelper.getUid());
+        }
+        else {
+            throw new ForbiddenException(30001);
+        }
+    }
 }

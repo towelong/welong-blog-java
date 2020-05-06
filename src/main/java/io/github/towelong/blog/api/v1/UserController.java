@@ -97,4 +97,10 @@ public class UserController {
         throw new Success(0);
     }
 
+    @PutMapping("/password")
+    @LoginRequired
+    public void changePassword(@RequestBody UserBO user) throws InvalidHashException {
+        userService.changePassword(user);
+        throw new Success(0);
+    }
 }

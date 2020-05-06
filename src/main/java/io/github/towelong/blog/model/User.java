@@ -9,6 +9,7 @@ package io.github.towelong.blog.model;
 import com.amdelamar.jhash.Hash;
 import com.amdelamar.jhash.algorithms.Type;
 import com.amdelamar.jhash.exception.InvalidHashException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ public class User extends BaseModel{
     private String email;
     private String account;
     private String password;
+
 
     /**
      * 设置密文密码
