@@ -39,27 +39,28 @@ public class ArticleService {
 
     /**
      * 查询用户发布的文章
+     *
      * @param uid
      * @return <>List</>
      */
-    public Page<ArticleUser> findUserArticle(Long uid,Integer pageNum, Integer size){
+    public Page<ArticleUser> findUserArticle(Long uid, Integer pageNum, Integer size) {
         Pageable pageable = PageRequest.of(
                 pageNum,
                 size,
                 Sort.by("createTime").descending());
-        return articleUserRepository.findAllByUserId(uid,pageable);
+        return articleUserRepository.findAllByUserId(uid, pageable);
     }
 
 
-    public Page<Article> getLatestPagingArticle(Integer pageNum, Integer size){
+    public Page<Article> getLatestPagingArticle(Integer pageNum, Integer size) {
         Pageable pageable = PageRequest.of(
                 pageNum,
                 size,
                 Sort.by("createTime").descending());
-        return articleRepository.findAllByStatus(true,pageable);
+        return articleRepository.findAllByStatus(true, pageable);
     }
 
-    public Page<Article> getLatestPagingArticleAll(Integer pageNum, Integer size){
+    public Page<Article> getLatestPagingArticleAll(Integer pageNum, Integer size) {
         Pageable pageable = PageRequest.of(
                 pageNum,
                 size,
@@ -69,7 +70,7 @@ public class ArticleService {
 
 
     @Transactional
-    public void addArticle(ArticleBO article, Long tid){
+    public void addArticle(ArticleBO article, Long tid) {
 
         // 1. 添加文章到article
         articleRepository.addArticle(
@@ -85,29 +86,31 @@ public class ArticleService {
         tagArticleRepository.insertTagIdAndArticleId(tid, aid);
     }
 
-    public void updateStatus(Long id,Long status){
+    public void updateStatus(Long id, Long status) {
         articleRepository.updateArticleStatus(id, status);
     }
 
-    public void updateArticle(ArticleBO articleBO){
-
-        articleRepository.updateArticle(
-                articleBO.getTitle(),
-                articleBO.getDescription(),
-                articleBO.getImage(),
-                articleBO.getContent(),
-                articleBO.getId()
-                );
-        // tag_id没有的话就直接更新文章，若有，就去tag_article中更新tag_id
-        tagArticleRepository.updateTagArticle(articleBO.getTagId(),articleBO.getId());
-
+    @Transactional
+    public void updateArticle(ArticleBO articleBO) {
+        Long tagId = articleBO.getTagId();
+        if (tagId == null) {
+            articleRepository.updateArticle(
+                    articleBO.getTitle(),
+                    articleBO.getDescription(),
+                    articleBO.getImage(),
+                    articleBO.getContent(),
+                    articleBO.getId()
+            );
+        } else {
+            // tag_id没有的话就直接更新文章，若有，就去tag_article中更新tag_id
+            tagArticleRepository.updateTagArticle(tagId, articleBO.getId());
+        }
     }
-
     // TODO: 一篇文章只对应一个标签，待改进
 
-    public void deleteArticle(Long id){
-        articleRepository.deleteArticle(new Date(),id);
-        articleUserRepository.deleteArticle(new Date(),id);
+    public void deleteArticle(Long id) {
+        articleRepository.deleteArticle(new Date(), id);
+        articleUserRepository.deleteArticle(new Date(), id);
     }
 
 }
