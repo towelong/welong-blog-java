@@ -163,7 +163,7 @@ public class UserService {
             userRepository.editUserPassword(password1, RequestHelper.getUid());
         }
         else {
-            throw new ForbiddenException(30001);
+            throw new ForbiddenException(20003);
         }
     }
 }
