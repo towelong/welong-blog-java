@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -76,6 +77,15 @@ public class GlobalExceptionAdvice {
     public UnifyResponse handleJwtExpiredException(){
         return new UnifyResponse(10007,"令牌已过期");
     }
+
+    @ExceptionHandler({NoHandlerFoundException.class})
+    @ResponseBody
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public UnifyResponse handleNoHandlerFoundException(){
+        return new UnifyResponse(10002,"资源未找到");
+    }
+
+
 
 
     private String formatAllErrorsMessages(List<ObjectError> errors){
